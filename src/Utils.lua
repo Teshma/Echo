@@ -1,6 +1,6 @@
 -- ------------------------------------------------------------------------------
 
-function RequireFolder(folderPath)
+function RequireScripts(folderPath)
     local children = love.filesystem.getDirectoryItems(folderPath)
     print(folderPath)
     while #children > 0 do
