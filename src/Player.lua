@@ -5,8 +5,9 @@ Player =
     w = 40,
     h = 40,
     velocity = {dx = 0, dy = 0},
-    speed = 100
+    speed = 100,
 }
+-- ------------------------------------------------------------------------------
 
 function Player:Update(dt)
     if love.keyboard.isDown("w") then
@@ -29,6 +30,21 @@ function Player:Update(dt)
     self.velocity.dy = 0
 end
 
+-- ------------------------------------------------------------------------------
+
 function Player:Draw()
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
 end
+
+-- ------------------------------------------------------------------------------
+
+function Player:Keypressed(key)
+    if (key == "space") then
+
+    end
+
+end
+
+-- ------------------------------------------------------------------------------
+
+table.insert(Entities, Player)

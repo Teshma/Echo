@@ -2,7 +2,6 @@
 
 function RequireScripts(folderPath)
     local children = love.filesystem.getDirectoryItems(folderPath)
-    print(folderPath)
     while #children > 0 do
         local toAppend = {}
         local toRemove = {}
@@ -14,18 +13,20 @@ function RequireScripts(folderPath)
                     toAppend = love.filesystem.getDirectoryItems(filePath)
                 elseif info.type == "file" then
                     local requirePath = filePath:gsub("/", "."):gsub(".lua", "")
-                    _G[children[i]] = require(requirePath)
-                    print("requiring " .. requirePath)
+                    require(requirePath)
+                    print("required " .. requirePath)
                 end
             end
             table.insert(toRemove, i)
         end
 
-        for i = 1, #toRemove do
+        for i = #toRemove, 1, -1 do
             table.remove(children, toRemove[i])
         end
 
-        table.append(children, toAppend)
+        if #toAppend > 0 then
+            table.append(children, toAppend)
+        end
     end
 end
 
