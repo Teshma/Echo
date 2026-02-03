@@ -2,7 +2,7 @@ Enemy = {}
 Enemy.__index = function (table, key)
     return Enemy[key]
 end
-Enemies = {}
+
 
 function Enemy.New(x, y, type)
     if type == "dummy" then
@@ -13,7 +13,7 @@ function Enemy.New(x, y, type)
         t.w = 40
         t.h = 40
 
-        table.insert(Enemies, t)
+        table.insert(Entities, t)
     end
 end
 

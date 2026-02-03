@@ -10,6 +10,8 @@ Player =
 -- ------------------------------------------------------------------------------
 
 function Player:Update(dt)
+    self.velocity.dx, self.velocity.dy = 0, 0
+
     if love.keyboard.isDown("w") then
         self.velocity.dy = -self.speed
     end
@@ -25,9 +27,6 @@ function Player:Update(dt)
 
     self.x = self.x + self.velocity.dx * dt
     self.y = self.y + self.velocity.dy * dt
-
-    self.velocity.dx = 0
-    self.velocity.dy = 0
 end
 
 -- ------------------------------------------------------------------------------
@@ -46,5 +45,3 @@ function Player:Keypressed(key)
 end
 
 -- ------------------------------------------------------------------------------
-
-table.insert(Entities, Player)
