@@ -11,7 +11,7 @@ function love.load()
     LEFT_VECTOR = {-1, 0}
     RIGHT_VECTOR = {1, 0}
 
-    love.window.setMode(480, 360, {display = 1})
+    love.window.setMode(480, 360, {display = 3})
 
     Entities = {}
     table.insert(Entities, Player)
@@ -38,17 +38,20 @@ function love.update(dt)
 
                 if entity.velocity then
                     -- <0 = moving down = hit the top of the other entity
-                    local dot_product_up = DotProduct(entity.velocity.dx, entity.velocity.dy, UP_VECTOR[1], UP_VECTOR[2])
-                    if dot_product_up < 0 then
-                        local dy = entity.y + entity.h - other.y
-                        entity.y = entity.y - dy
-                    elseif dot_product_up > 0 then
-                        local dy = other.y + other.h - entity.y
-                        entity.y = entity.y + dy
+                    local dot_product_up = DotProduct(other.x - entity.x, other.y - entity.y, UP_VECTOR[1], UP_VECTOR[2])
+                    local dot_product_left = DotProduct(other.x - entity.x, other.y - entity.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
+                    print("Up " .. dot_product_up)
+                    print("left " .. dot_product_left)
+                    if math.abs(dot_product_up) > math.abs(dot_product_left) then
+                        if dot_product_up < 0 then
+                            local dy = entity.y + entity.h - other.y
+                            entity.y = entity.y - dy
+                        elseif dot_product_up > 0 then
+                            local dy = other.y + other.h - entity.y
+                            entity.y = entity.y + dy
+                        end
                     else
                         -- <0 = moving right = hit the left of the other entity
-                        local dot_product_left = DotProduct(entity.velocity.dx, entity.velocity.dy, LEFT_VECTOR[1], LEFT_VECTOR[2])
-                        print(dot_product_left)
                         if dot_product_left < 0 then
                             local dx = entity.x + entity.w - other.x
                             entity.x = entity.x - dx
@@ -57,6 +60,7 @@ function love.update(dt)
                             entity.x = entity.x + dx
                         end
                     end
+
 
                     local dy = entity.y + entity.h - other.y
                     --entity.y = entity.y - dy
