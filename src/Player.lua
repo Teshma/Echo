@@ -6,6 +6,7 @@ Player =
     h = 40,
     velocity = {dx = 0, dy = 0},
     speed = 100,
+    health = Health(100, 100, 2),
 }
 -- ------------------------------------------------------------------------------
 
@@ -27,12 +28,16 @@ function Player:Update(dt)
 
     self.x = self.x + self.velocity.dx * dt
     self.y = self.y + self.velocity.dy * dt
+
+    self.health:Update(dt)
 end
 
 -- ------------------------------------------------------------------------------
 
 function Player:Draw()
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+
+    self.health:Draw(self.x, self.y - 20, self.w * 1.5, 10)
 end
 
 -- ------------------------------------------------------------------------------
@@ -42,6 +47,18 @@ function Player:Keypressed(key)
 
     end
 
+end
+
+-- ------------------------------------------------------------------------------
+
+function Player:CollisionResponse(other)
+    self.health:ResolveCollision(self, other)
+end
+
+-- ------------------------------------------------------------------------------
+
+function Player:ToString()
+    return "Player"
 end
 
 -- ------------------------------------------------------------------------------

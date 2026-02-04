@@ -11,7 +11,7 @@ function love.load()
     LEFT_VECTOR = {-1, 0}
     RIGHT_VECTOR = {1, 0}
 
-    love.window.setMode(480, 360, {display = 3})
+    love.window.setMode(1080, 720, {display = 2})
 
     Entities = {}
     table.insert(Entities, Player)
@@ -22,26 +22,24 @@ end
 
 function love.update(dt)
     for i,entity in ipairs(Entities) do
-        entity:Update(dt)
+
+        if not entity.health or entity.health.alive then
+            entity:Update(dt)
+        end
 
         for j = i + 1, #Entities do
             local other = Entities[j]
+            -- broad phase
             if AABB(entity, other) then
-                print("resolve collision")
 
-                -- decide which side of the object the collision is occuring
-                    -- need to dot product against each axis
-                    -- +y/-y gets whether entity is on left or right
-                    -- +x/-x gets whether entity is top or bottom
-                    -- dot product entity direction against each surface normal of the other entity
-                -- correct in that side.
+                -- resolution
+                if entity.CollisionResponse then entity:CollisionResponse(other) end
+                if other.CollisionResponse then other:CollisionResponse(entity) end
 
                 if entity.velocity then
                     -- <0 = moving down = hit the top of the other entity
                     local dot_product_up = DotProduct(other.x - entity.x, other.y - entity.y, UP_VECTOR[1], UP_VECTOR[2])
                     local dot_product_left = DotProduct(other.x - entity.x, other.y - entity.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
-                    print("Up " .. dot_product_up)
-                    print("left " .. dot_product_left)
                     if math.abs(dot_product_up) > math.abs(dot_product_left) then
                         if dot_product_up < 0 then
                             local dy = entity.y + entity.h - other.y
@@ -60,16 +58,10 @@ function love.update(dt)
                             entity.x = entity.x + dx
                         end
                     end
-
-
-                    local dy = entity.y + entity.h - other.y
-                    --entity.y = entity.y - dy
                 end
             end
         end
     end
-
-
 end
 
 -- ------------------------------------------------------------------------------
@@ -77,7 +69,10 @@ end
 function love.draw()
     love.graphics.print(love.timer.getFPS(), 0, 0)
     for _,entity in ipairs(Entities) do
-        entity:Draw()
+
+        if not entity.health or entity.health.alive then
+            entity:Draw()
+        end
     end
 end
 
