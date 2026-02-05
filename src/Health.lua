@@ -1,8 +1,8 @@
-Health = function(max, current, invulTime)
+Health = function(healthValue, invulTime)
     return
     {
-        maxHealth = max,
-        currentHealth = current,
+        maxHealth = healthValue,
+        currentHealth = healthValue,
         maxInvulTime = invulTime,
         currentInvulTime = 0,
         alive = true,
@@ -12,6 +12,10 @@ Health = function(max, current, invulTime)
         Update = function (self, dt)
             if self.currentInvulTime > 0 then
                 self.currentInvulTime = self.currentInvulTime - dt
+            end
+
+            if self.currentHealth <= 0 then
+                self.alive = false
             end
         end,
 
@@ -27,6 +31,8 @@ Health = function(max, current, invulTime)
         -- ------------------------------------------------------------------------------
         ResolveCollision = function(self, entity, other)
             if other.damage and self.currentInvulTime <= 0 then
+
+                print (entity:ToString() .. " took " .. other.damage .. " by " .. other:ToString())
                 self.currentHealth = self.currentHealth - other.damage
                 self.currentInvulTime = self.maxInvulTime
 

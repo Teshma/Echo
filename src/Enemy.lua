@@ -12,16 +12,21 @@ function Enemy.New(x, y, type)
         t.y = y
         t.w = 40
         t.h = 40
-        t.health = Health(100, 100)
+        t.health = Health(100, 2)
         t.damage = 10
+        t.solid = true
 
         table.insert(Entities, t)
     end
 end
 
+-- ------------------------------------------------------------------------------
+
 function Enemy:Update(dt)
     self.health:Update(dt)
 end
+
+-- ------------------------------------------------------------------------------
 
 function Enemy:Draw()
     local r,g,b,a = love.graphics.getColor()

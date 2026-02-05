@@ -6,7 +6,8 @@ Player =
     h = 40,
     velocity = {dx = 0, dy = 0},
     speed = 100,
-    health = Health(100, 100, 2),
+    health = Health(100, 2),
+    solid = true,
 }
 -- ------------------------------------------------------------------------------
 
@@ -44,7 +45,12 @@ end
 
 function Player:Keypressed(key)
     if (key == "space") then
+        print("attack")
+        local mag = math.sqrt((self.velocity.dx * self.velocity.dx) + (self.velocity.dy) * (self.velocity.dy))
+        local normDirX = self.velocity.dx / mag
+        local normDirY = self.velocity.dy / mag
 
+        table.insert(Entities, #Entities, Attack(self, self.x + normDirX * 40, self.y + normDirY * 40, 20, 20, 10))
     end
 
 end
