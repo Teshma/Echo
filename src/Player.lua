@@ -9,7 +9,10 @@ Player =
     speed = 100,
     health = Health(100, 2),
     solid = true,
+    image = love.graphics.newImage("assets/aseprite/test.png")
 }
+Player.w = Player.image:getWidth()
+Player.h = Player.image:getHeight()
 -- ------------------------------------------------------------------------------
 
 function Player:Update(dt)
@@ -45,7 +48,7 @@ end
 -- ------------------------------------------------------------------------------
 
 function Player:Draw()
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.draw(self.image, self.x, self.y)
 
     self.health:Draw(self.x, self.y - 20, self.w * 1.5, 10)
 end

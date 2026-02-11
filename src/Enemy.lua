@@ -10,8 +10,9 @@ function Enemy.New(x, y, type)
         setmetatable(t, Enemy)
         t.x = x
         t.y = y
-        t.w = 40
-        t.h = 40
+        t.image = love.graphics.newImage("assets/aseprite/test.png")
+        t.w = t.image:getWidth()
+        t.h = t.image:getHeight()
         t.health = Health(100, 2)
         t.damage = 10
         t.solid = true
@@ -31,7 +32,7 @@ end
 function Enemy:Draw()
     local r,g,b,a = love.graphics.getColor()
     love.graphics.setColor(1, 0, 0, 1)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.draw(self.image, self.x, self.y)
     love.graphics.setColor(r, g, b, a)
 
     self.health:Draw(self.x, self.y - 20, self.w * 1.5, 10)
