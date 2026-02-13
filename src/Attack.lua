@@ -7,7 +7,7 @@ Attack = function (owner, x, y, w, h, damage)
         w = w,
         h = h,
         damage = damage,
-        health = Health(20, 1),
+        health = Health(1, 1),
         solid = false,
 
         -- ------------------------------------------------------------------------------

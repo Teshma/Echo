@@ -25,39 +25,39 @@ function love.update(dt)
 
         if not entity.health or entity.health.alive then
             entity:Update(dt)
-        end
 
-        for j = i + 1, #Entities do
-            local other = Entities[j]
+            for j = i + 1, #Entities do
+                local other = Entities[j]
 
-            if not other.health or other.health.alive then
-                -- broad phase
-                if AABB(entity, other) then
+                if not other.health or other.health.alive then
+                    -- broad phase
+                    if AABB(entity, other) then
 
-                    -- resolution
-                    if entity.CollisionResponse then entity:CollisionResponse(other) end
-                    if other.CollisionResponse then other:CollisionResponse(entity) end
+                        -- resolution
+                        if entity.CollisionResponse then entity:CollisionResponse(other) end
+                        if other.CollisionResponse then other:CollisionResponse(entity) end
 
-                    if entity.velocity and other.solid then
-                        -- <0 = moving down = hit the top of the other entity
-                        local dot_product_up = DotProduct(other.x - entity.x, other.y - entity.y, UP_VECTOR[1], UP_VECTOR[2])
-                        local dot_product_left = DotProduct(other.x - entity.x, other.y - entity.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
-                        if math.abs(dot_product_up) > math.abs(dot_product_left) then
-                            if dot_product_up < 0 then
-                                local dy = entity.y + entity.h - other.y
-                                entity.y = entity.y - dy
-                            elseif dot_product_up > 0 then
-                                local dy = other.y + other.h - entity.y
-                                entity.y = entity.y + dy
-                            end
-                        else
-                            -- <0 = moving right = hit the left of the other entity
-                            if dot_product_left < 0 then
-                                local dx = entity.x + entity.w - other.x
-                                entity.x = entity.x - dx
-                            elseif dot_product_left > 0 then
-                                local dx = other.x + other.w - entity.x
-                                entity.x = entity.x + dx
+                        if entity.velocity and other.solid then
+                            -- <0 = moving down = hit the top of the other entity
+                            local dot_product_up = DotProduct(other.x - entity.x, other.y - entity.y, UP_VECTOR[1], UP_VECTOR[2])
+                            local dot_product_left = DotProduct(other.x - entity.x, other.y - entity.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
+                            if math.abs(dot_product_up) > math.abs(dot_product_left) then
+                                if dot_product_up < 0 then
+                                    local dy = entity.y + entity.h - other.y
+                                    entity.y = entity.y - dy
+                                elseif dot_product_up > 0 then
+                                    local dy = other.y + other.h - entity.y
+                                    entity.y = entity.y + dy
+                                end
+                            else
+                                -- <0 = moving right = hit the left of the other entity
+                                if dot_product_left < 0 then
+                                    local dx = entity.x + entity.w - other.x
+                                    entity.x = entity.x - dx
+                                elseif dot_product_left > 0 then
+                                    local dx = other.x + other.w - entity.x
+                                    entity.x = entity.x + dx
+                                end
                             end
                         end
                     end

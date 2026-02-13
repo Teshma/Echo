@@ -30,8 +30,11 @@ Health = function(healthValue, invulTime)
 
         -- ------------------------------------------------------------------------------
         ResolveCollision = function(self, entity, other)
-            if other.damage and self.currentInvulTime <= 0 then
+            if other.owner and other.owner == entity then
+                return
+            end
 
+            if other.damage and self.currentInvulTime <= 0 then
                 print (entity:ToString() .. " took " .. other.damage .. " by " .. other:ToString())
                 self.currentHealth = self.currentHealth - other.damage
                 self.currentInvulTime = self.maxInvulTime
