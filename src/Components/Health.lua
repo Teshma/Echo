@@ -1,6 +1,7 @@
-Health = function(healthValue, invulTime)
+Health = function(owner, healthValue, invulTime)
     return
     {
+        owner = owner,
         maxHealth = healthValue,
         currentHealth = healthValue,
         maxInvulTime = invulTime,
@@ -29,21 +30,23 @@ Health = function(healthValue, invulTime)
         end,
 
         -- ------------------------------------------------------------------------------
-        ResolveCollision = function(self, entity, other)
-            if other.owner and other.owner == entity then
-                return
-            end
+        OnCollision = function(self, other, dx, dy)
+            if not other.damage or self.currentInvulTime > 0 then return end
 
-            if other.damage and self.currentInvulTime <= 0 then
-                print (entity:ToString() .. " took " .. other.damage .. " by " .. other:ToString())
-                self.currentHealth = self.currentHealth - other.damage
-                self.currentInvulTime = self.maxInvulTime
-
-                if self.currentHealth <= 0 then
-                    self.alive = false
-                end
-            end
+            print (owner:__tostring() .. " took " .. other.damage .. " by " .. other:__tostring())
+            self:TakeDamage(other.damage)
         end,
+
+        -- ------------------------------------------------------------------------------
+
+        TakeDamage = function (self, damage)
+            self.currentHealth = self.currentHealth - damage
+            self.currentInvulTime = self.maxInvulTime
+            if self.currentHealth <= 0 then
+                self.alive = false
+            end
+        end
+
 
         -- ------------------------------------------------------------------------------
     }

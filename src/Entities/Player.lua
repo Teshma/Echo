@@ -1,20 +1,21 @@
-Player =
-{
+Player = Entity:new({
     x = 100,
     y = 100,
     velocity = {dx = 0, dy = 0},
     dir = {1, 0},
     lastDirX = 1,
     speed = 100,
-    health = Health(100, 2),
     solid = true,
     image = love.graphics.newImage("assets/aseprite/test.png"),
-}
+    priority = 1,
+})
+
+Player.health = Player:AddComponent(Health(Player, 100, 2))
 Player.w = Player.image:getWidth()
 Player.h = Player.image:getHeight()
+Player.centre = {x = Player.x + Player.w/2, y = Player.y + Player.h/2}
 
 Player.walkingSheet = love.graphics.newImage("assets/aseprite/walk.png")
-local numAnims = Player.walkingSheet:getWidth() / 16 * 4
 Player.walkIndex = 1
 Player.walking =
 {
@@ -52,9 +53,11 @@ function Player:Update(dt)
 
     self.x = self.x + self.velocity.dx * dt
     self.y = self.y + self.velocity.dy * dt
+    self.centre.x = self.x + self.w/2
+    self.centre.y = self.y + self.h/2
 
     if (math.abs(self.velocity.dx) > 0 or math.abs(self.velocity.dy) > 0) then
-        self.walkIndex = self.walkIndex + dt * 4
+        self.walkIndex = self.walkIndex + dt * 3
 
         if (math.modf(self.walkIndex) >= 4) then
             self.walkIndex = 2
@@ -74,8 +77,8 @@ function Player:Draw()
     if (self.lastDirX < 0 ) then
         offset = 16 * 4
     end
-    love.graphics.draw(self.walkingSheet, self.walking[math.modf(self.walkIndex)], self.x, self.y, 0, self.lastDirX, 1, offset)
-
+    --love.graphics.draw(self.walkingSheet, self.walking[math.modf(self.walkIndex)], self.x, self.y, 0, self.lastDirX, 1, offset)
+    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     self.health:Draw(self.x, self.y - 20, self.w * 1.5, 10)
 end
 
@@ -84,20 +87,25 @@ end
 function Player:Keypressed(key)
     if (key == "space") then
         print("attack")
-        table.insert(Entities, #Entities, Attack(self, (self.x + self.w/2 - 10) + self.lastDirX * 40, (self.y + self.h/2 - 10) + self.dir[2] * 40, 20, 20, 10))
+        local offsetToPlayer = 10
+        local attackW = 40
+        local attackH = 40
+        local attackX = (self.centre.x - attackW/2) + self.dir[1] * (self.w/2 + attackW/2 + offsetToPlayer)
+        local attackY = (self.centre.y - attackH/2) + self.dir[2] * (self.h/2 + attackH/2 + offsetToPlayer)
+        table.insert(Entities, #Entities, Attack.New(self, attackX, attackY, attackW, attackH, 10))
     end
 
 end
 
 -- ------------------------------------------------------------------------------
 
-function Player:CollisionResponse(other)
-    self.health:ResolveCollision(self, other)
+function Player:CollisionResponse(other, dx, dy)
+    self.Base.CollisionResponse(self, other, dx, dy)
 end
 
 -- ------------------------------------------------------------------------------
 
-function Player:ToString()
+function Player:__tostring()
     return "Player"
 end
 

@@ -10,7 +10,10 @@ function RequireScripts(folderPath)
             local info = love.filesystem.getInfo(filePath)
             if info ~= nil then
                 if info.type == "directory" then
-                    toAppend = love.filesystem.getDirectoryItems(filePath)
+                    local items = love.filesystem.getDirectoryItems(filePath)
+                    for _, item in ipairs(items) do
+                        table.insert(toAppend, children[i] .. "/" .. item)
+                    end
                 elseif info.type == "file" then
                     local requirePath = filePath:gsub("/", "."):gsub(".lua", "")
                     require(requirePath)
