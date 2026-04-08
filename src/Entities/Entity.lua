@@ -2,13 +2,21 @@ Entities = {}
 
 Entity = {}
 Entity.__index = Entity
+Entity.indexes = 0
+
+-- ------------------------------------------------------------------------------
+
+function Entity:inherit(table)
+    setmetatable(table, self)
+
+    return table
+end
 
 -- ------------------------------------------------------------------------------
 
 function Entity:new(init)
     local e = init or {}
     setmetatable(e, self)
-    e.Base = Entity
     e.Components = {}
 
     table.insert(Entities, e)

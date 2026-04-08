@@ -92,15 +92,9 @@ function Player:Keypressed(key)
         local attackH = 40
         local attackX = (self.centre.x - attackW/2) + self.dir[1] * (self.w/2 + attackW/2 + offsetToPlayer)
         local attackY = (self.centre.y - attackH/2) + self.dir[2] * (self.h/2 + attackH/2 + offsetToPlayer)
-        table.insert(Entities, #Entities, Attack.New(self, attackX, attackY, attackW, attackH, 10))
+        Attack.New(self, attackX, attackY, attackW, attackH, 10)
     end
 
-end
-
--- ------------------------------------------------------------------------------
-
-function Player:CollisionResponse(other, dx, dy)
-    self.Base.CollisionResponse(self, other, dx, dy)
 end
 
 -- ------------------------------------------------------------------------------

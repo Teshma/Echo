@@ -1,6 +1,6 @@
 require("src.Entities.Entity")
 
-Enemy = {}
+Enemy = Entity:inherit({})
 Enemy.__index = Enemy
 setmetatable(Enemy, Entity)
 
@@ -38,12 +38,6 @@ function Enemy:Draw()
     love.graphics.setColor(r, g, b, a)
 
     self.health:Draw(self.x, self.y - 20, self.w * 1.5, 10)
-end
-
--- ------------------------------------------------------------------------------
-
-function Enemy:CollisionResponse(other, dx, dy)
-    self.Base.CollisionResponse(self, other, dx, dy)
 end
 
 -- ------------------------------------------------------------------------------

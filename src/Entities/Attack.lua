@@ -1,8 +1,7 @@
 require("src.Entities.Entity")
 
-Attack = {}
+Attack = Entity:inherit({})
 Attack.__index = Attack
-setmetatable(Attack, Entity)
 
 
 function Attack.New(owner, x, y, w, h, damage)
@@ -58,7 +57,7 @@ function Attack:CollisionResponse(other, dx, dy)
         other.attackable:OnAttacked(direction, self.damage)
     end
 
-    --self.health.alive = false
+    self.health.alive = false
 end
 
 -- ------------------------------------------------------------------------------
