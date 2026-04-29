@@ -17,7 +17,7 @@ function RequireScripts(folderPath)
                 elseif info.type == "file" then
                     local requirePath = filePath:gsub("/", "."):gsub(".lua", "")
                     require(requirePath)
-                    print("required " .. requirePath)
+                    Debug.Log("required " .. requirePath)
                 end
             end
             table.insert(toRemove, i)
@@ -42,3 +42,5 @@ function table.append(table1, table2)
         table.insert(table1, table2[i])
     end
 end
+
+-- ------------------------------------------------------------------------------

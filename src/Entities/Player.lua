@@ -1,28 +1,36 @@
-Player = Entity:new({
-    x = 100,
-    y = 100,
-    velocity = {dx = 0, dy = 0},
-    dir = {1, 0},
-    lastDirX = 1,
-    speed = 100,
-    solid = true,
-    image = love.graphics.newImage("assets/aseprite/test.png"),
-    priority = 1,
-})
+Player = Entity:inherit()
 
-Player.health = Player:AddComponent(Health(Player, 100, 2))
-Player.w = Player.image:getWidth()
-Player.h = Player.image:getHeight()
-Player.centre = {x = Player.x + Player.w/2, y = Player.y + Player.h/2}
+function Player.New()
+    local player = Player:new(
+    {
+        x = 100,
+        y = 100,
+        velocity = {dx = 0, dy = 0},
+        dir = {1, 0},
+        lastDirX = 1,
+        speed = 100,
+        solid = true,
+        mass = 100,
+        --image = love.graphics.newImage("assets/aseprite/test.png"),
+        priority = 1,
+    })
 
-Player.walkingSheet = love.graphics.newImage("assets/aseprite/walk.png")
-Player.walkIndex = 1
-Player.walking =
-{
-    love.graphics.newQuad(0, 0, 16 * 4, 32 * 4, Player.walkingSheet),
-    love.graphics.newQuad(16 * 4, 0, 16 * 4, 32 * 4, Player.walkingSheet),
-    love.graphics.newQuad(16 * 8, 0, 16 * 4, 32 * 4, Player.walkingSheet)
-}
+    player.health = player:AddComponent(Health(player, 100, 2))
+    player.w = 32 -- player.image:getWidth()
+    player.h = 32 -- player.image:getHeight()
+    player.centre = {x = player.x + player.w/2, y = player.y + player.h/2}
+
+    player.walkingSheet = love.graphics.newImage("assets/aseprite/walk.png")
+    player.walkIndex = 1
+    player.walking =
+    {
+        love.graphics.newQuad(0, 0, 16 * 4, 32 * 4, player.walkingSheet),
+        love.graphics.newQuad(16 * 4, 0, 16 * 4, 32 * 4, player.walkingSheet),
+        love.graphics.newQuad(16 * 8, 0, 16 * 4, 32 * 4, player.walkingSheet)
+    }
+
+    Player.player = player
+end
 -- ------------------------------------------------------------------------------
 
 function Player:Update(dt)
@@ -42,13 +50,11 @@ function Player:Update(dt)
         self.velocity.dx = -self.speed
         self.dir[1] = -1
         self.dir[2] = 0
-        self.lastDirX = -1
     end
     if love.keyboard.isDown("d") then
         self.velocity.dx = self.speed
         self.dir[1] = 1
         self.dir[2] = 0
-        self.lastDirX = 1
     end
 
     self.x = self.x + self.velocity.dx * dt
@@ -85,6 +91,7 @@ end
 -- ------------------------------------------------------------------------------
 
 function Player:Keypressed(key)
+    self = self.player
     if (key == "space") then
         print("attack")
         local offsetToPlayer = 10
@@ -94,7 +101,6 @@ function Player:Keypressed(key)
         local attackY = (self.centre.y - attackH/2) + self.dir[2] * (self.h/2 + attackH/2 + offsetToPlayer)
         Attack.New(self, attackX, attackY, attackW, attackH, 10)
     end
-
 end
 
 -- ------------------------------------------------------------------------------

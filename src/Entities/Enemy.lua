@@ -1,24 +1,23 @@
 require("src.Entities.Entity")
 
-Enemy = Entity:inherit({})
-Enemy.__index = Enemy
-setmetatable(Enemy, Entity)
+Enemy = Entity:inherit()
 
-function Enemy.New(x, y)
+
+function Enemy.New(x, y, mass)
     local enemy = Enemy:new(
     {
         x = x,
         y = y,
-        image = love.graphics.newImage("assets/aseprite/test.png"),
+        --image = love.graphics.newImage("assets/aseprite/test.png"),
         damage = 10,
         solid = true,
         priority = 1,
+        mass = mass or 20,
     })
 
     enemy.health = enemy:AddComponent(Health(enemy, 100, 2))
-    enemy.attackable = Attackable(enemy)
-    enemy.w = enemy.image:getWidth()
-    enemy.h = enemy.image:getHeight()
+    enemy.w = 32 -- enemy.image:getWidth()
+    enemy.h = 32 -- enemy.image:getHeight()
     enemy.centre = {x = enemy.x + enemy.w/2, y = enemy.y + enemy.h/2}
 end
 

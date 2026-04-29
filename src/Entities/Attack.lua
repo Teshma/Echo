@@ -16,16 +16,14 @@ function Attack.New(owner, x, y, w, h, damage)
         solid = false,
     })
 
-    attack.health = attack:AddComponent(Health(attack, 15, 1))
+    attack.health = attack:AddComponent(Health(attack, 15, 1, 2))
     attack.centre = {x = x + w/2, y = y + h/2}
 
     return attack
 end
-
 -- ------------------------------------------------------------------------------
 
 function Attack:Update(dt)
-    self.health.currentHealth = self.health.currentHealth - dt * 2
     self.health:Update(dt)
 end
 

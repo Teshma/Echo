@@ -11,7 +11,8 @@ function love.load()
     LEFT_VECTOR = {-1, 0}
     RIGHT_VECTOR = {1, 0}
 
-    love.window.setMode(1080, 720, {display = 1})
+    love.window.setMode(1080, 720, {display = 3})
+    Player.New()
     Enemy.New(300, 200)
 end
 
@@ -21,7 +22,9 @@ function love.update(dt)
     for i,entity in ipairs(Entities) do
 
         if not entity.health or entity.health.alive then
-            if entity.Update then entity:Update(dt) end
+            if entity.Update then
+                entity:Update(dt)
+            end
 
             for j = i + 1, #Entities do
                 local other = Entities[j]
@@ -29,13 +32,12 @@ function love.update(dt)
                 if not other.health or other.health.alive then
                     -- broad phase
                     if AABB(entity, other) then
-                        print("aabb " .. entity:__tostring() .. " - " .. other:__tostring())
-                        -- resolution
+                        -- resolution - moving solid objects so they are no longer inside each other.
                         local dx, dy = 0, 0
-                        if other.solid then
+                        if entity.solid and other.solid then
                             -- <0 = moving down = hit the top of the other entity
-                            local dot_product_up = DotProduct(other.centre.x - entity.centre.x, other.centre.y - entity.centre.y, UP_VECTOR[1], UP_VECTOR[2])
-                            local dot_product_left = DotProduct(other.centre.x - entity.centre.x, other.centre.y - entity.centre.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
+                            local dot_product_up = DotProduct(other.x - entity.x, other.y - entity.y, UP_VECTOR[1], UP_VECTOR[2])
+                            local dot_product_left = DotProduct(other.x - entity.x, other.y - entity.y, LEFT_VECTOR[1], LEFT_VECTOR[2])
                             if math.abs(dot_product_up) > math.abs(dot_product_left) then
                                 if dot_product_up < 0 then
                                     dy = -1 * (entity.y + entity.h - other.y)
@@ -52,8 +54,20 @@ function love.update(dt)
                             end
                         end
 
-                        if entity.CollisionResponse then entity:CollisionResponse(other, dx, dy) end
-                        if other.CollisionResponse then other:CollisionResponse(entity, -dx, -dy) end
+                        if entity.mass < other.mass then
+                            entity.x = entity.x + dx
+                            entity.y = entity.y + dy
+                        elseif entity.mass > other.mass then
+                            other.x = other.x - dx
+                            other.y = other.y - dy
+                        end
+                        -- Collision Response Logic
+                        if entity.CollisionResponse then
+                            entity:CollisionResponse(other)
+                        end
+                        if other.CollisionResponse then
+                            other:CollisionResponse(entity)
+                        end
                     end
                 end
             end

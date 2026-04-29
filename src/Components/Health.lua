@@ -1,4 +1,4 @@
-Health = function(owner, healthValue, invulTime)
+Health = function(owner, healthValue, invulTime, decay)
     return
     {
         owner = owner,
@@ -7,10 +7,12 @@ Health = function(owner, healthValue, invulTime)
         maxInvulTime = invulTime,
         currentInvulTime = 0,
         alive = true,
+        decay = decay or 0,
 
         -- ------------------------------------------------------------------------------
 
         Update = function (self, dt)
+            self.currentHealth = self.currentHealth - self.decay * dt
             if self.currentInvulTime > 0 then
                 self.currentInvulTime = self.currentInvulTime - dt
             end
@@ -30,7 +32,7 @@ Health = function(owner, healthValue, invulTime)
         end,
 
         -- ------------------------------------------------------------------------------
-        OnCollision = function(self, other, dx, dy)
+        OnCollision = function(self, other)
             if not other.damage or self.currentInvulTime > 0 then return end
 
             print (owner:__tostring() .. " took " .. other.damage .. " by " .. other:__tostring())
@@ -45,9 +47,13 @@ Health = function(owner, healthValue, invulTime)
             if self.currentHealth <= 0 then
                 self.alive = false
             end
-        end
+        end,
 
 
         -- ------------------------------------------------------------------------------
+
+        __tostring = function(self)
+            return "Health"
+        end
     }
 end
