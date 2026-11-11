@@ -11,7 +11,7 @@ function love.load()
     LEFT_VECTOR = {-1, 0}
     RIGHT_VECTOR = {1, 0}
 
-    love.window.setMode(1080, 720, {display = 3})
+    love.window.setMode(1080, 720, {display = 1})
     Player.New()
     Enemy.New(300, 200)
 end

@@ -33,6 +33,7 @@ Health = function(owner, healthValue, invulTime, decay)
 
         -- ------------------------------------------------------------------------------
         OnCollision = function(self, other)
+            if other.owner == self.owner then return end
             if not other.damage or self.currentInvulTime > 0 then return end
 
             print (owner:__tostring() .. " took " .. other.damage .. " by " .. other:__tostring())

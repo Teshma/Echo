@@ -14,6 +14,7 @@ function Attack.New(owner, x, y, w, h, damage)
         h = h,
         damage = damage,
         solid = false,
+        mass = 0,
     })
 
     attack.health = attack:AddComponent(Health(attack, 15, 1, 2))
